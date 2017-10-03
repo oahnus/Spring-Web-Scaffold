@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: scaffold
+
+server:
+  port: 8921
+#  context-path: /hr
+
+#swagger:
+#  author: oahnus
+#  url: www.oahnus.top
+#  version: 0.0.1
+
