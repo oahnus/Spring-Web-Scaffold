@@ -1,6 +1,7 @@
 package top.oahnus.common.dto;
 
 import lombok.Data;
+import top.oahnus.common.enums.ErrorType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,11 @@ public class ResultDto {
     private Integer code;
     private String msg;
     private Map<String, Object> data = new HashMap<>();
+
+    public ResultDto(ErrorType type, String msg) {
+        this.code = type.ordinal();
+        this.msg = msg;
+    }
 
     public ResultDto data(String key, Object value) {
         this.data.put(key, value);
