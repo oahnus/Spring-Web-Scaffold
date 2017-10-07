@@ -6,6 +6,7 @@ import top.oahnus.common.constants.Message;
 import top.oahnus.common.dto.TokenDto;
 import top.oahnus.common.exception.AuthException;
 import top.oahnus.common.payload.AuthPayload;
+import top.oahnus.common.utils.MD5Helper;
 import top.oahnus.domain.UserAuth;
 import top.oahnus.repository.UserAuthRepository;
 
@@ -23,7 +24,9 @@ public class AuthService {
     private SessionService sessionService;
 
     public TokenDto login(AuthPayload payload) {
-        UserAuth auth = authRepository.findFirstByUsernameAndPassword(payload.getUsername(), payload.getPassword());
+        String username = payload.getUsername();
+        String password = MD5Helper.getMd5(payload.getPassword());
+        UserAuth auth = authRepository.findFirstByUsernameAndPassword(username, password);
         if (auth == null) {
             throw new AuthException(Message.NO_AUTH);
         }
