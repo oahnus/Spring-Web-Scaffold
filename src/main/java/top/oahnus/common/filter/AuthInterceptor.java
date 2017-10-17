@@ -1,6 +1,8 @@
 package top.oahnus.common.filter;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import top.oahnus.common.annotations.OpenAccess;
@@ -19,11 +21,19 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String option = request.getMethod();
+        if ("OPTIONS".equals(option)){
+            return true;
+        }
         HandlerMethod method = (HandlerMethod) handler;
         OpenAccess access = method.getMethodAnnotation(OpenAccess.class);
 
-        sessionService.getSessionToken();
-        System.out.println("pre");
+        if (sessionService == null) {//解决service为null无法注入问题
+            BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+            sessionService = (SessionService) factory.getBean("sessionService");
+        }
+        Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
+
         return true;
     }
 }

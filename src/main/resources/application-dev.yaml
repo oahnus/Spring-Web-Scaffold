@@ -25,7 +25,9 @@ spring:
       waitMill: 3000
       maxTotal: 500
       maxIdle: 5
-
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
 logging:
   pattern:
     console: "%clr(%d %-5level %logger : %msg%n)"

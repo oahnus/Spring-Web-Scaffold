@@ -23,6 +23,7 @@ public class AuthService {
     @Autowired
     private SessionService sessionService;
 
+
     public TokenDto login(AuthPayload payload) {
         String username = payload.getUsername();
         String password = MD5Helper.getMd5(payload.getPassword());
@@ -31,7 +32,7 @@ public class AuthService {
             throw new AuthException(Message.NO_AUTH);
         }
         String token = UUID.randomUUID().toString();
-        sessionService.saveToken(auth.getUserId(), token);
+        System.out.println(sessionService.saveToken(auth.getUserId(), token));
         return new TokenDto().token(token).userId(auth.getUserId());
     }
 }
