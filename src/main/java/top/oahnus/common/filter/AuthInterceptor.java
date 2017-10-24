@@ -28,6 +28,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod method = (HandlerMethod) handler;
         OpenAccess access = method.getMethodAnnotation(OpenAccess.class);
 
+        if (access != null) {
+            return true;
+        }
+
         if (sessionService == null) {//解决service为null无法注入问题
             BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
             sessionService = (SessionService) factory.getBean("sessionService");

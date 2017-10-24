@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import top.oahnus.common.constants.Message;
 import top.oahnus.common.dto.ResultDto;
 import top.oahnus.common.enums.ErrorType;
 import top.oahnus.common.exception.AuthException;
@@ -24,7 +25,7 @@ public class ExceptionAdvice implements LoggerMixin {
     public ResultDto processException(Exception e) throws Exception {
         logger().error(e.getMessage());
         e.printStackTrace();
-        return new ResultDto(ErrorType.INTERNAL_SERVER_ERROR, "系统内部错误");
+        return new ResultDto(ErrorType.INTERNAL_SERVER_ERROR, Message.INNER_SERVER_ERROR);
     }
 
     @ExceptionHandler(AuthException.class)
@@ -32,7 +33,7 @@ public class ExceptionAdvice implements LoggerMixin {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResultDto processAuthException(AuthException e) {
         logger().error(e.getMessage());
-        return new ResultDto(ErrorType.NO_AUTH, "未登录");
+        return new ResultDto(ErrorType.NO_AUTH, Message.NO_AUTH);
     }
 
     @ResponseBody
@@ -40,7 +41,7 @@ public class ExceptionAdvice implements LoggerMixin {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResultDto processNotFoundException(DataNotFoundException e) {
         logger().error(e.getMessage());
-        return new ResultDto(ErrorType.DATA_NOT_FOUND, "未登录");
+        return new ResultDto(ErrorType.DATA_NOT_FOUND, Message.DATA_NOT_FOUND);
     }
 
     @ResponseBody
@@ -48,7 +49,7 @@ public class ExceptionAdvice implements LoggerMixin {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResultDto processBadRequestException(RequestParamInvalidException e) {
         logger().error(e.getMessage());
-        return new ResultDto(ErrorType.REQUEST_PARAM_INVALID, "请求参数错误");
+        return new ResultDto(ErrorType.REQUEST_PARAM_INVALID, Message.BAD_REQUEST);
     }
 
 }
