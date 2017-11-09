@@ -33,6 +33,7 @@ public class AuthService {
         }
         String token = UUID.randomUUID().toString();
         System.out.println(sessionService.saveToken(auth.getUserId(), token));
+//        System.out.println(sessionService.getSessionUserId());
         return new TokenDto().token(token).userId(auth.getUserId());
     }
 }

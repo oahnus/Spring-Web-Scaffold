@@ -31,5 +31,5 @@ logging:
   pattern:
     console: "%clr(%d %-5level %logger : %msg%n)"
   level:
-    top.oahnus: ERROR
+    top.oahnus: debug
     org.hibernate: ERROR

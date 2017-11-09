@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 @Aspect
 public class DownloadAspect implements LoggerMixin {
 
-    @Pointcut("execution(* top.oahnus.controller.DownloadController.*(..))")
+    @Pointcut("@annotation(top.oahnus.common.annotations.Download)")
     public void download(){}
 
 //    @Around("download()")
@@ -37,7 +37,7 @@ public class DownloadAspect implements LoggerMixin {
 //        return ret;
 //    }
 
-    @Around("download() && @annotation(top.oahnus.common.annotations.Download)")
+    @Around("download()")
     public Object before(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletResponse response = (HttpServletResponse) joinPoint.getArgs()[0];
         File file = (File) joinPoint.proceed();
