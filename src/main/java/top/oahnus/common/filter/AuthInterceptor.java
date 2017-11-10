@@ -6,6 +6,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import top.oahnus.common.annotations.OpenAccess;
+import top.oahnus.common.exception.AuthException;
 import top.oahnus.service.SessionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +38,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             sessionService = (SessionService) factory.getBean("sessionService");
         }
         Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
-
+        if (userId == null) {
+            throw new AuthException("无权限");
+        }
         return true;
     }
 }

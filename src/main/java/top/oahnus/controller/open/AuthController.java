@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import top.oahnus.common.dto.TokenDto;
 import top.oahnus.common.payload.AuthPayload;
+import top.oahnus.controller.mixin.ControllerMixIn;
 import top.oahnus.domain.UserAuth;
 import top.oahnus.service.AuthService;
 import top.oahnus.service.SessionService;
@@ -16,10 +17,7 @@ import top.oahnus.service.SessionService;
 @RestController
 @CrossOrigin
 @RequestMapping("/auth")
-public class AuthController {
-    @Autowired
-    private SessionService sessionService;
-
+public class AuthController extends ControllerMixIn{
     @Autowired
     private AuthService authService;
 
