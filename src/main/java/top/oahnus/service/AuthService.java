@@ -9,6 +9,7 @@ import top.oahnus.common.payload.AuthPayload;
 import top.oahnus.common.utils.MD5Helper;
 import top.oahnus.domain.primary.UserAuth;
 import top.oahnus.repository.primary.UserAuthRepository;
+import top.oahnus.service.session.EhcacheSessionService;
 
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class AuthService {
     @Autowired
     private UserAuthRepository authRepository;
     @Autowired
-    private SessionService sessionService;
+    private EhcacheSessionService sessionService;
 
 
     public TokenDto login(AuthPayload payload) {

@@ -23,7 +23,7 @@ public class ScheduledTask implements LoggerMixin {
      *  initialDelay = 1000 第一次延迟1秒执行
      *  cron cron规则执行
      */
-    @Scheduled(cron = "* */5 * * * *") // 每5分钟
+    @Scheduled(fixedRate = 60000) // 每分钟
     public void printTime() {
         logger().info(format.format(new Date()));
     }
