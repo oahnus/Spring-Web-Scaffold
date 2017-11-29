@@ -1,7 +1,7 @@
 package top.oahnus.common.dto;
 
 import lombok.Data;
-import top.oahnus.service.SessionService;
+import top.oahnus.service.session.SessionService;
 
 import java.util.Date;
 
@@ -18,7 +18,7 @@ public class TokenDto {
 
     public TokenDto() {
         this.createAt = new Date();
-        this.expire = new Date(this.createAt.getTime() + SessionService.expire * 86400000);
+        this.expire = new Date(this.createAt.getTime() + SessionService.EXPIRE * 86400000);
     }
 
     public TokenDto token(String token) {

@@ -18,6 +18,8 @@ import java.nio.file.Paths;
 
 /**
  * Created by oahnus on 2017/10/24
+ * 用于支持Controller中标记了@Download注解的方法 实现http文件下载
+ * 仅支持单文件下载
  * 10:31.
  */
 @Component
