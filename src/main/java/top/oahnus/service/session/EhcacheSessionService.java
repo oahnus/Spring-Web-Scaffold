@@ -18,9 +18,9 @@ public class EhcacheSessionService implements SessionService {
         return userId;
     }
 
-    @Cacheable(value="token", key = "#token")
+    @Cacheable(value="token", key = "#token", condition = "#token != null")
     public Long getUserId(String token) {
-        return null;
+        return -1L;
     }
 
     public Long getSessionUserId() {

@@ -27,7 +27,7 @@ public class NormalLoginStrategy implements LoginStrategy {
             sessionService = (EhcacheSessionService) factory.getBean("ehcacheSessionService");
         }
         Long userId = sessionService.getUserId(request.getHeader(Constants.TOKEN));
-        if (userId == null) {
+        if (userId == null || userId == -1L) {
             throw new AuthException("无权限");
         }
         return true;

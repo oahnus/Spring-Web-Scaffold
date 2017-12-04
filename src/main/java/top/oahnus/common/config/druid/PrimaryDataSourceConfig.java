@@ -52,7 +52,7 @@ public class PrimaryDataSourceConfig {
                 .dataSource(primaryDataSource)
                 .properties(getVendorProperties(primaryDataSource))
                 .packages("top.oahnus.domain.primary") //设置实体类所在位置
-                .persistenceUnit("userPersistenceUnit")
+                .persistenceUnit("primary")
                 .build();
         //.getObject();//不要在这里直接获取EntityManagerFactory
     }

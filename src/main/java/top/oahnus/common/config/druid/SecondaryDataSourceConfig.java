@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Created by oahnus on 2017/11/28
@@ -39,16 +40,33 @@ public class SecondaryDataSourceConfig {
     /**
      * 我们通过LocalContainerEntityManagerFactoryBean来获取EntityManagerFactory实例
      * LocalContainerEntityManagerFactoryBean和userEntityManagerFactory方法其中一个注解@Primary即可
+     *
+     * 此配置用于双MySql数据源，如果是mysql，sqlserver作为数据源，配置项要进行修改
+     * 注释 application-*.yaml 中的jpa配置
+     * @Primary 注解要标记在mysql数据源上，以求mysql语法兼容sqlserver
+     *
      * @return
      */
     @Bean(name = "secondaryEntityManagerFactoryBean")
     //@secondary
     public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactoryBean(EntityManagerFactoryBuilder builder) {
+        // SqlServer数据源使用此配置
+//        LocalContainerEntityManagerFactoryBean em = builder
+//                .dataSource(secondaryDataSource)
+//                .packages("top.oahnus.domain.secondary") //设置实体类所在位置
+//                .persistenceUnit("secondary")
+//                .build();
+//        Properties properties = new Properties();
+//        properties.setProperty("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+//        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLServer2012Dialect");
+//        em.setJpaProperties(properties);
+//        return em;
+
         return builder
                 .dataSource(secondaryDataSource)
                 .properties(getVendorProperties(secondaryDataSource))
                 .packages("top.oahnus.domain.secondary") //设置实体类所在位置
-                .persistenceUnit("userPersistenceUnit")
+                .persistenceUnit("secondary")
                 .build();
         //.getObject();//不要在这里直接获取EntityManagerFactory
     }

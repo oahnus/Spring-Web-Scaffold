@@ -24,7 +24,7 @@ public class ExceptionAdvice implements LoggerMixin {
     @ResponseBody
     public ResultDto processException(Exception e) throws Exception {
         logger().error(e.getMessage());
-        e.printStackTrace();
+//        e.printStackTrace();
         return new ResultDto(ErrorType.INTERNAL_SERVER_ERROR, Message.INNER_SERVER_ERROR);
     }
 
