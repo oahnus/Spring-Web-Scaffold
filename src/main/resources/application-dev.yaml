@@ -3,7 +3,7 @@ spring:
   application:
     name: scaffold
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/scaffold
+    url: jdbc:mysql://127.0.0.1:3306/scaffold?useSSL=false
     username: root
     password: root
     driver-class-name: com.mysql.jdbc.Driver
@@ -33,3 +33,12 @@ logging:
   level:
     top.oahnus: debug
     org.hibernate: ERROR
+
+oahnus:
+  config:
+    name: 241399
+    couponIds:
+      - 12
+      - 13
+      - 14
+    coupons: 12, 12, 21
