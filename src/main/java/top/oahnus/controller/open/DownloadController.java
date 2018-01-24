@@ -1,4 +1,4 @@
-package top.oahnus.controller;
+package top.oahnus.controller.open;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,17 +21,19 @@ import java.io.File;
 public class DownloadController {
 
     @GetMapping("/test")
-    @OpenAccess
     @Download
     public File downloadTest (HttpServletResponse response, HttpServletRequest request) {
         return new File("src/main/resources/application.yaml");
     }
 
     @GetMapping("/readme")
-    @OpenAccess
     @Download
     public File downloadTest2(HttpServletResponse response) {
         return new File("src/main/resources/application-dev.yaml");
     }
 
+    @GetMapping("")
+    public String TestOpen(){
+        return "test";
+    }
 }
