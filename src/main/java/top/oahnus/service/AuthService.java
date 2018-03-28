@@ -8,7 +8,7 @@ import top.oahnus.common.exception.AuthException;
 import top.oahnus.common.payload.AuthPayload;
 import top.oahnus.common.utils.MD5Helper;
 import top.oahnus.domain.UserAuth;
-import top.oahnus.repository.UserAuthRepository;
+import top.oahnus.repository.UserAuthRepo;
 
 import java.util.UUID;
 
@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 public class AuthService {
     @Autowired
-    private UserAuthRepository authRepository;
+    private UserAuthRepo authRepository;
     @Autowired
     private SessionService sessionService;
 

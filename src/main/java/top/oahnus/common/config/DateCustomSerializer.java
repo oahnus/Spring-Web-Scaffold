@@ -15,7 +15,7 @@ import java.util.TimeZone;
  * Created by oahnus on 2018/2/11
  * 9:15.
  */
-public class DateCustomeSerializer extends JsonSerializer<Date> {
+public class DateCustomSerializer extends JsonSerializer<Date> {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateFormat DATETIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
