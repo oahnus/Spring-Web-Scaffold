@@ -2,8 +2,8 @@ version: '2'
 services:
   mariadb:
     build: ./MariaDB
-    volumes_from:
-      - volumes_data
+#    volumes_from:
+#      - volumes_data
     ports:
       - "3306:3306"
     environment:
@@ -14,8 +14,8 @@ services:
       container_name: O_MariaDB
   redis:
     build: ./Redis
-    volumes_from:
-      - volumes_data
+#    volumes_from:
+#      - volumes_data
     ports:
       - "6379:6379"
     container_name: O_Redis
@@ -31,9 +31,9 @@ services:
       RABBITMQ_DEFAULT_PASS: oahnus
       container_name: O_RabbitMQ
 
-  volumes_data:
-    image: tianon/true
-    volumes:
-      - ./storage/data/mysql:/var/lib/mysql
-      - ./storage/data/redis:/data
-    container_name: O_data
+#  volumes_data:
+#    image: tianon/true
+#    volumes:
+#      - ./storage/data/mysql:/var/lib/mysql
+#      - ./storage/data/redis:/data
+#    container_name: O_data
