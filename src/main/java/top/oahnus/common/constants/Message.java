@@ -6,6 +6,8 @@ package top.oahnus.common.constants;
  */
 public class Message {
     public static final String NO_AUTH = "权限错误,请重新登录";
+    public static final String USER_NOT_EXISTED = "用户不存在";
+    public static final String PASSWORD_FAILED = "密码错误";
     public static final String DATA_NOT_FOUND = "请求数据未找到";
     public static final String DATA_EXISTED = "数据已存在";
     public static final String BAD_REQUEST = "请求参数错误";

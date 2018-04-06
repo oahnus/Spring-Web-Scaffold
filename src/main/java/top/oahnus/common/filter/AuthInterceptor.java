@@ -1,10 +1,14 @@
 package top.oahnus.common.filter;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import top.oahnus.common.annotations.OpenAccess;
+import top.oahnus.common.constants.Message;
+import top.oahnus.common.exception.AuthException;
 import top.oahnus.service.SessionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,14 +42,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (access != null || packageName.equals(openPackageName)) {
             return true;
         }
-//        if (sessionService == null) {//解决service为null无法注入问题
-//            BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
-//            sessionService = (SessionService) factory.getBean("sessionService");
-//        }
-//        Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
-//        if (userId == null) {
-//            throw new AuthException("无权限");
-//        }
+        if (sessionService == null) {//解决service为null无法注入问题
+            BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+            sessionService = (SessionService) factory.getBean("sessionService");
+        }
+        Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
+        if (userId == null) {
+            throw new AuthException(Message.NO_AUTH);
+        }
         return true;
     }
 }

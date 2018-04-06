@@ -1,5 +1,6 @@
 package top.oahnus.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.oahnus.common.constants.Message;
@@ -17,23 +18,27 @@ import java.util.UUID;
  * 0:51.
  */
 @Service
-public class AuthService {
+@Slf4j
+public class AuthService{
     @Autowired
     private UserAuthRepo authRepository;
     @Autowired
     private SessionService sessionService;
 
-
     public TokenDto login(AuthPayload payload) {
         String username = payload.getUsername();
-        String password = MD5Helper.getMd5(payload.getPassword());
-        UserAuth auth = authRepository.findFirstByUsernameAndPassword(username, password);
+//        String password = MD5Helper.getMd5(payload.getPassword());
+        String password = payload.getPassword();
+        UserAuth auth = authRepository.findFirstByUsername(username);
         if (auth == null) {
-            throw new AuthException(Message.NO_AUTH);
+            throw new AuthException(Message.USER_NOT_EXISTED);
+        }
+        if (!auth.getPassword().equals(password)) {
+            throw new AuthException(Message.PASSWORD_FAILED);
         }
         String token = UUID.randomUUID().toString();
-        System.out.println(sessionService.saveToken(auth.getUserId(), token));
-//        System.out.println(sessionService.getSessionUserId());
-        return new TokenDto().token(token).userId(auth.getUserId());
+        sessionService.saveToken(token, auth.getUserId());
+        log.debug("[AuthService.login] - payload = {}, token = {}", payload, token);
+        return new TokenDto().token(token);
     }
 }

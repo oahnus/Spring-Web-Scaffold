@@ -14,7 +14,6 @@ public class TokenDto {
     private String token;
     private Date expire;
     private Date createAt;
-    private Long userId;
 
     public TokenDto() {
         this.createAt = new Date();
@@ -23,11 +22,6 @@ public class TokenDto {
 
     public TokenDto token(String token) {
         this.token = token;
-        return this;
-    }
-
-    public TokenDto userId(Long userId) {
-        this.userId = userId;
         return this;
     }
 }

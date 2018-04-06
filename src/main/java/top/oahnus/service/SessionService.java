@@ -18,7 +18,7 @@ public class SessionService implements LoginMixin {
     private final String TOKEN = "token";
 
     @CachePut(value = "token", key = "#token", condition = "#userId != null")
-    public Long saveToken(Long userId, String token) {
+    public Long saveToken(String token, Long userId) {
         return userId;
     }
 
