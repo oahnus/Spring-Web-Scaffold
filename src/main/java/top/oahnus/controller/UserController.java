@@ -11,8 +11,5 @@ import top.oahnus.controller.mixin.ControllerMixIn;
 @CrossOrigin
 @RequestMapping("/user")
 public class UserController extends ControllerMixIn {
-    @GetMapping("/test")
-    public Long test() {
-        return getUserId();
-    }
+
 }

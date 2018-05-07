@@ -1,0 +1,20 @@
+CREATE DATABASE IF NOT EXISTS scaffold;
+
+-- User Table
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nickname VARCHAR(100) NOT NULL DEFAULT '' COMMENT '昵称',
+  PRIMARY KEY (id)
+)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARSET = utf8 COMMENT 'user_info';
+
+-- User Auth Table
+DROP TABLE IF EXISTS user_auth;
+CREATE TABLE user_auth (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  username VARCHAR(40) NOT NULL,
+  password VARCHAR(40) NOT NULL,
+  user_id BIGINT NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_u_p(username, password)
+)ENGINE = InnoDB AUTO_INCREMENT = 1 CHARSET = utf8 COMMENT 'user_auth';

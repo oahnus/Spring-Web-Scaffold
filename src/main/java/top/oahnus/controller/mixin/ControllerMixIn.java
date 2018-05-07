@@ -2,7 +2,7 @@ package top.oahnus.controller.mixin;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import top.oahnus.interfaces.LoginMixin;
-import top.oahnus.service.session.EhcacheSessionService;
+import top.oahnus.service.SessionService;
 
 /**
  * Created by oahnus on 2017/10/17
@@ -10,7 +10,7 @@ import top.oahnus.service.session.EhcacheSessionService;
  */
 public class ControllerMixIn implements LoginMixin{
     @Autowired
-    private EhcacheSessionService sessionService;
+    private SessionService sessionService;
 
     public Long getUserId() {
         return sessionService.getUserId(getToken());

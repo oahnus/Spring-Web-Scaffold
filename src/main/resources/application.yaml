@@ -16,6 +16,10 @@ server:
 #    roles: SUPERUSER
 #  context-path: /scaffold
 
+open:
+  package: top.oahnus.controller.open
+#  context-path: /hr
+
 #swagger:
 #  author: oahnus
 #  url: www.oahnus.top

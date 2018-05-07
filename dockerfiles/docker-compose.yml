@@ -1,0 +1,39 @@
+version: '2'
+services:
+  mariadb:
+    build: ./MariaDB
+#    volumes_from:
+#      - volumes_data
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: db
+      MYSQL_USER: oahnus
+      MYSQL_PASSWORD: oahnus
+      MYSQL_ROOT_PASSWORD: rootpass
+      container_name: O_MariaDB
+  redis:
+    build: ./Redis
+#    volumes_from:
+#      - volumes_data
+    ports:
+      - "6379:6379"
+    container_name: O_Redis
+  rabbitmq:
+    build: ./RabbitMQ
+    ports:
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+    privileged: true
+    environment:
+      RABBITMQ_DEFAULT_USER: oahnus
+      RABBITMQ_DEFAULT_PASS: oahnus
+      container_name: O_RabbitMQ
+
+#  volumes_data:
+#    image: tianon/true
+#    volumes:
+#      - ./storage/data/mysql:/var/lib/mysql
+#      - ./storage/data/redis:/data
+#    container_name: O_data
