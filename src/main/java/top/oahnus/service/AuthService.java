@@ -7,9 +7,9 @@ import top.oahnus.common.constants.Message;
 import top.oahnus.common.dto.TokenDto;
 import top.oahnus.common.exception.AuthException;
 import top.oahnus.common.payload.AuthPayload;
-import top.oahnus.common.utils.MD5Helper;
-import top.oahnus.domain.UserAuth;
-import top.oahnus.repository.UserAuthRepo;
+import top.oahnus.domain.primary.UserAuth;
+import top.oahnus.repository.primary.UserAuthRepository;
+import top.oahnus.service.session.RedisSessionService;
 
 import java.util.UUID;
 
@@ -21,15 +21,15 @@ import java.util.UUID;
 @Slf4j
 public class AuthService{
     @Autowired
-    private UserAuthRepo authRepository;
+    private UserAuthRepository userAuthRepo;
     @Autowired
-    private SessionService sessionService;
+    private RedisSessionService sessionService;
 
     public TokenDto login(AuthPayload payload) {
         String username = payload.getUsername();
 //        String password = MD5Helper.getMd5(payload.getPassword());
         String password = payload.getPassword();
-        UserAuth auth = authRepository.findFirstByUsername(username);
+        UserAuth auth = userAuthRepo.findFirstByUsername(username);
         if (auth == null) {
             throw new AuthException(Message.USER_NOT_EXISTED);
         }
@@ -37,7 +37,7 @@ public class AuthService{
             throw new AuthException(Message.PASSWORD_FAILED);
         }
         String token = UUID.randomUUID().toString();
-        sessionService.saveToken(token, auth.getUserId());
+        sessionService.saveToken(auth.getUserId(), token);
         log.debug("[AuthService.login] - payload = {}, token = {}", payload, token);
         return new TokenDto().token(token);
     }

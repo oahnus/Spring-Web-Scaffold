@@ -2,17 +2,18 @@ package top.oahnus.common.config.druid;
 
 import com.alibaba.druid.wall.WallConfig;
 import com.alibaba.druid.wall.WallFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import top.oahnus.interfaces.LoggerMixin;
 
 /**
  * Created by oahnus on 2017/11/24
  * 15:04.
  */
 @Configuration
-public class DruidDBConfig implements LoggerMixin {
+@Slf4j
+public class DruidDBConfig{
     @Bean(name="wallConfig")
     WallConfig wallFilterConfig() {
         WallConfig wc = new WallConfig();

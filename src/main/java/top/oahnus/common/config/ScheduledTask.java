@@ -1,8 +1,8 @@
 package top.oahnus.common.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import top.oahnus.interfaces.LoggerMixin;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,7 +12,8 @@ import java.util.Date;
  * 14:58.
  */
 @Component
-public class ScheduledTask implements LoggerMixin {
+@Slf4j
+public class ScheduledTask {
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -25,6 +26,14 @@ public class ScheduledTask implements LoggerMixin {
      */
     @Scheduled(fixedRate = 60000) // 每分钟
     public void printTime() {
-        logger().info(format.format(new Date()));
+        // do something
+    }
+
+    /**
+     * 每天零点
+     */
+    @Scheduled(cron = "0 0 0 * * *")
+    public void snapshot() {
+        // do something
     }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import top.oahnus.common.exception.RequestParamInvalidException;
-import top.oahnus.interfaces.LoggerMixin;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -16,7 +15,7 @@ import java.util.Date;
  * Created by oahnus on 2017/12/8
  * 13:58.
  */
-public class DateJsonDeserializer extends JsonDeserializer<Date> implements LoggerMixin {
+public class DateJsonDeserializer extends JsonDeserializer<Date>{
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -24,7 +23,6 @@ public class DateJsonDeserializer extends JsonDeserializer<Date> implements Logg
         try {
             return FORMAT.parse(jsonParser.getText());
         } catch (ParseException e) {
-            logger().error(e.getMessage());
             throw new RequestParamInvalidException(e.getMessage());
         }
     }

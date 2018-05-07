@@ -8,7 +8,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import top.oahnus.common.annotations.UserId;
-import top.oahnus.service.SessionService;
+import top.oahnus.service.session.RedisSessionService;
+import top.oahnus.service.session.SessionService;
 
 /**
  * Created by oahnus on 2018/4/4
@@ -17,7 +18,7 @@ import top.oahnus.service.SessionService;
 @Component
 public class UserIdResolver implements HandlerMethodArgumentResolver {
     @Autowired
-    private SessionService sessionService;
+    private RedisSessionService sessionService;
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {

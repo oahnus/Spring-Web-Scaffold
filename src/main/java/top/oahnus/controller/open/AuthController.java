@@ -7,9 +7,7 @@ import top.oahnus.common.annotations.UserId;
 import top.oahnus.common.dto.TokenDto;
 import top.oahnus.common.payload.AuthPayload;
 import top.oahnus.controller.mixin.ControllerMixIn;
-import top.oahnus.domain.UserAuth;
 import top.oahnus.service.AuthService;
-import top.oahnus.service.SessionService;
 
 import javax.servlet.http.Cookie;
 

@@ -3,13 +3,14 @@ package top.oahnus.common.filter;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import top.oahnus.common.annotations.OpenAccess;
 import top.oahnus.common.constants.Message;
 import top.oahnus.common.exception.AuthException;
-import top.oahnus.service.SessionService;
+import top.oahnus.service.session.RedisSessionService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,9 +19,10 @@ import javax.servlet.http.HttpServletResponse;
  * Created by oahnus on 2017/10/3
  * 11:50.
  */
+@Component
 public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Autowired
-    private SessionService sessionService;
+    private RedisSessionService sessionService;
 
     @Value("${open.package}")
     private String openPackageName;
@@ -42,9 +44,10 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (access != null || packageName.equals(openPackageName)) {
             return true;
         }
-        if (sessionService == null) {//解决service为null无法注入问题
+        if (sessionService == null) {
+            //解决service为null无法注入问题
             BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
-            sessionService = (SessionService) factory.getBean("sessionService");
+            sessionService = (RedisSessionService) factory.getBean("redisSessionService");
         }
         Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
         if (userId == null) {

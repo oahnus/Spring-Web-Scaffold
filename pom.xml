@@ -31,6 +31,14 @@
 			<!--<artifactId>spring-boot-starter-actuator</artifactId>-->
 		<!--</dependency>-->
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf -->
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.6</version>
+		</dependency>
+
 		<!--阿里巴巴数据库连接池-->
 		<dependency>
 			<groupId>com.alibaba</groupId>

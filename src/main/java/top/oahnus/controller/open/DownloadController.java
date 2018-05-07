@@ -1,5 +1,6 @@
 package top.oahnus.controller.open;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import top.oahnus.common.annotations.OpenAccess;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.net.URL;
 
 /**
  * Created by oahnus on 2017/10/24
@@ -20,20 +22,18 @@ import java.io.File;
 @RequestMapping("/download")
 public class DownloadController {
 
+    /**
+     * @param response required param 用于将文件写入response body
+     * @return 请求下载的文件对象
+     */
     @GetMapping("/test")
     @Download
-    public File downloadTest (HttpServletResponse response, HttpServletRequest request) {
-        return new File("src/main/resources/application.yaml");
-    }
-
-    @GetMapping("/readme")
-    @Download
-    public File downloadTest2(HttpServletResponse response) {
-        return new File("src/main/resources/application-dev.yaml");
-    }
-
-    @GetMapping("")
-    public String TestOpen(){
-        return "test";
+    public File downloadTest (HttpServletResponse response) {
+        URL url = DownloadController.class.getClassLoader().getResource("");
+        String filePath = url == null ? "" : url.getPath();
+        if (StringUtils.isBlank(filePath)) {
+            return null;
+        }
+        return new File(filePath + "/static/download.txt");
     }
 }

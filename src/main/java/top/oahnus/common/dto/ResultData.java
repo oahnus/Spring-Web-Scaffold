@@ -11,17 +11,22 @@ import java.util.Map;
  * 0:52.
  */
 @Data
-public class ResultDto {
+public class ResultData {
     private Integer code;
     private String msg;
     private Map<String, Object> data = new HashMap<>();
 
-    public ResultDto(ErrorType type, String msg) {
+    public ResultData(ErrorType type, String msg) {
         this.code = type.ordinal();
         this.msg = msg;
     }
 
-    public ResultDto data(String key, Object value) {
+    public ResultData() {
+        this.code = 0;
+        this.msg = "success";
+    }
+
+    public ResultData data(String key, Object value) {
         this.data.put(key, value);
         return this;
     }

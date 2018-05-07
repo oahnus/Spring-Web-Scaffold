@@ -1,5 +1,6 @@
 package top.oahnus.aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -7,12 +8,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import top.oahnus.interfaces.LoggerMixin;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
@@ -24,20 +25,11 @@ import java.nio.file.Paths;
  */
 @Component
 @Aspect
-public class DownloadAspect implements LoggerMixin {
+@Slf4j
+public class DownloadAspect {
 
     @Pointcut("@annotation(top.oahnus.common.annotations.Download)")
     public void download(){}
-
-//    @Around("download()")
-//    public Object downloadFile(ProceedingJoinPoint joinPoint) throws Throwable {
-//        logger.info("enter");
-//        Object[] args = joinPoint.getArgs();
-//        HttpServletResponse response = (HttpServletResponse) args[0];
-//        System.out.println(response.getContentType());
-//        Object ret = joinPoint.proceed();
-//        return ret;
-//    }
 
     @Around("download()")
     public Object before(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -45,11 +37,15 @@ public class DownloadAspect implements LoggerMixin {
         File file = (File) joinPoint.proceed();
 
         if (file == null) {
-            System.out.println("null");
+            log.info("[DownloadAspect] - Download file is null");
         } else {
             response.setContentType("multipart/form-data");
             response.addHeader("Content-Disposition",
                     "attachment; filename=" + URLEncoder.encode(file.getName(), "utf-8"));
+            // FIXME
+            // in Paths.get(uri) uri can't contain %20
+            // this is java bug in jdk7(version below 7u40) and jdk8 (version below 8b36)
+            // solution: make sure uri not contain special character or update jdk version
             response.getOutputStream().write(Files.readAllBytes(Paths.get(file.toURI())));
             response.getOutputStream().flush();
         }
@@ -58,6 +54,6 @@ public class DownloadAspect implements LoggerMixin {
 
     @Before("download()")
     public void doBefore(JoinPoint point) {
-        logger().info("Download File");
+        log.debug("[DownloadAspect] - Download File");
     }
 }

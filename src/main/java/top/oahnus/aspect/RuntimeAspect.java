@@ -1,11 +1,11 @@
 package top.oahnus.aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import top.oahnus.interfaces.LoggerMixin;
 
 
 /**
@@ -14,19 +14,18 @@ import top.oahnus.interfaces.LoggerMixin;
  */
 @Component
 @Aspect
-public class RuntimeAspect implements LoggerMixin {
-    @Pointcut("execution(* top.oahnus.service.*.*(..))")
+@Slf4j
+public class RuntimeAspect {
+    @Pointcut("@annotation(top.oahnus.common.annotations.RunTime)")
     public void executeMethod() {}
 
     @Around("executeMethod()")
     public Object before(ProceedingJoinPoint joinPoint) throws Throwable {
         Long start = System.currentTimeMillis();
         Object retVal = joinPoint.proceed();
-        Long end = System.currentTimeMillis() - start;
+        Long time = System.currentTimeMillis() - start;
 
-        String info = "execute " + joinPoint.getTarget() + " " + end + " ms";
-        logger().debug(info);
-
+        log.debug("[RuntimeAspect] - method: {}, runtime: {} ms", joinPoint.getTarget(), time);
         return retVal;
     }
 }
