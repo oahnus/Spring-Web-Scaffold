@@ -23,12 +23,11 @@ import java.net.URL;
 public class DownloadController {
 
     /**
-     * @param response required param 用于将文件写入response body
      * @return 请求下载的文件对象
      */
     @GetMapping("/test")
     @Download
-    public File downloadTest (HttpServletResponse response) {
+    public File downloadTest () {
         URL url = DownloadController.class.getClassLoader().getResource("");
         String filePath = url == null ? "" : url.getPath();
         if (StringUtils.isBlank(filePath)) {

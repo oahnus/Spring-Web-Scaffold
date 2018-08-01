@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.oahnus.common.config.DateCustomDeserializer;
-import top.oahnus.common.config.DateCustomSerializer;
+import top.oahnus.common.config.date.DateCustomDeserializer;
+import top.oahnus.common.config.date.DateCustomSerializer;
 
 import java.util.Date;
 

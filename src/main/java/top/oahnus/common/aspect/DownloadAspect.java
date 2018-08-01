@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import top.oahnus.interfaces.HttpMixin;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -25,14 +26,14 @@ import java.nio.file.Paths;
 @Component
 @Aspect
 @Slf4j
-public class DownloadAspect {
+public class DownloadAspect implements HttpMixin {
 
     @Pointcut("@annotation(top.oahnus.common.annotations.Download)")
     public void download(){}
 
     @Around("download()")
     public Object before(ProceedingJoinPoint joinPoint) throws Throwable {
-        HttpServletResponse response = (HttpServletResponse) joinPoint.getArgs()[0];
+        HttpServletResponse response = response();
         File file = (File) joinPoint.proceed();
 
         if (file == null) {

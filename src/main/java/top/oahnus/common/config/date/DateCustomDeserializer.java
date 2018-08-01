@@ -1,4 +1,4 @@
-package top.oahnus.common.config;
+package top.oahnus.common.config.date;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
