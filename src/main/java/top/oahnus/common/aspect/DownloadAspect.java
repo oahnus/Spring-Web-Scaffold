@@ -1,4 +1,4 @@
-package top.oahnus.aspect;
+package top.oahnus.common.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.net.URLEncoder;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 

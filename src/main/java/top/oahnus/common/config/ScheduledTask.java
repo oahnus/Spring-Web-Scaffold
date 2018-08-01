@@ -1,8 +1,11 @@
 package top.oahnus.common.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import top.oahnus.domain.primary.UserAuth;
+import top.oahnus.repository.primary.UserAuthRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +18,9 @@ import java.util.Date;
 @Slf4j
 public class ScheduledTask {
 
+    @Autowired
+    private UserAuthRepository userAuthRepository;
+
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
@@ -24,7 +30,7 @@ public class ScheduledTask {
      *  initialDelay = 1000 第一次延迟1秒执行
      *  cron cron规则执行
      */
-    @Scheduled(fixedRate = 60000) // 每分钟
+//    @Scheduled(fixedRate = 60000) // 每分钟
     public void printTime() {
         // do something
     }
@@ -32,7 +38,7 @@ public class ScheduledTask {
     /**
      * 每天零点
      */
-    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(cron = "0 0 0 * * *")
     public void snapshot() {
         // do something
     }

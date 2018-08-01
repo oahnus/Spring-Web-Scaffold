@@ -19,6 +19,7 @@ public class UserAuth {
     private Long id;
 
     private String username;
-    private String password;
+    private String pwdHash;
+    private String salt;
     private Long userId;
 }

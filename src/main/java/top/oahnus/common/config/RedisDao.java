@@ -1,56 +1,42 @@
 package top.oahnus.common.config;
 
-import com.dyuproject.protostuff.LinkedBuffer;
-import com.dyuproject.protostuff.ProtobufIOUtil;
-import com.dyuproject.protostuff.Schema;
-import com.dyuproject.protostuff.runtime.RuntimeSchema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ObjectUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import top.oahnus.common.utils.ProtoStuffSerializerUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 /**
  * Created by oahnus on 2017/10/3
  * 8:39.
  */
 @Configuration
+@Slf4j
 public class RedisDao {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    @Value("${spring.application.name}")
+    private String keyBase;    //key基础
+
     private JedisPool jedisPool;
     @Value("${spring.redis.host}")
     private String ip;
     @Value("${spring.redis.port}")
     private int port;
-    @Value("${spring.redis.pool.max-active}")
+    @Value("${spring.redis.maxTotal}")
     private int maxTotal;
-    @Value("${spring.redis.pool.max-idle}")
+    @Value("${spring.redis.maxIdle}")
     private int maxIdle;
-    @Value("${spring.redis.pool.max-wait}")
+    @Value("${spring.redis.waitMill}")
     private long waitMill;
-    @Value("${spring.application.name}")
-    private String keyBase;    //key基础 判断程序
-
-    private LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
-
-    private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
-
-    private static <T> Schema<T> getSchema(Class<T> clazz) {
-        Schema<T> schema = (Schema<T>) cachedSchema.get(clazz);
-        if (schema == null) {
-            schema = RuntimeSchema.createFrom(clazz);
-            cachedSchema.put(clazz, schema);
-        }
-        return schema;
-    }
+    @Value("${spring.redis.password:null}")
+    private String password;
 
     @Bean
     public RedisDao redisFactory() {
@@ -65,72 +51,109 @@ public class RedisDao {
         //在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；
         config.setTestOnBorrow(true);
 
-        jedisPool = new JedisPool(config, ip, port);
+        /**
+         * 在将连接放回池中前，自动检验连接是否有效
+         */
+        config.setTestOnReturn(true);
+
+        /**
+         * 自动测试池中的空闲连接是否都是可用连接
+         */
+        config.setTestWhileIdle(true);
+
+        /**
+         * 每次释放连接的最大数目
+         */
+        config.setNumTestsPerEvictionRun(100);
+
+        /**
+         * 释放连接的扫描间隔（毫秒）
+         */
+        config.setTimeBetweenEvictionRunsMillis(10);
+
+        /**
+         * 连接空闲多久后释放(毫秒), 当空闲时间>该值 且 空闲连接>最大空闲连接数 时直接释放
+         */
+        config.setMinEvictableIdleTimeMillis(100);
+        if (ObjectUtils.isEmpty(password)||"null".equals(password)){
+            jedisPool = new JedisPool(config, ip, port,100000);
+        }else {
+            jedisPool = new JedisPool(config, ip, port,100000,password);
+        }
         return new RedisDao();
     }
 
     public <T> T getBean(String key, Class<T> targetClass) {
         try {
-            key = keyBase + key;
-            try (Jedis jedis = getJedis()) {
+            key = keyBase + ":" + key;
+
+            Jedis jedis = getJedis();
+            try {
                 byte[] bytes = jedis.get(key.getBytes());
+//               String bytes =  jedis.get(key);
                 if (bytes != null) {
-                    Schema<T> schema = getSchema(targetClass);
-                    T result = targetClass.newInstance();
-                    ProtobufIOUtil.mergeFrom(bytes, result, schema);
+                    T result = ProtoStuffSerializerUtil.deserialize(bytes, targetClass);
+//                    T result = JSON.parseObject(bytes,targetClass);
                     return result;
                 }
+            } finally {
+                returnResource(jedis);
             }
         } catch (Exception e) {
-            logger.error("jedis", e);
+            log.error("jedis", e);
         }
         return null;
     }
-
-    public <T> String putBean(String key, T object, Class<T> clazz) {
-        return putBean(key, object, clazz, 60 * 60);
+    public <T> String putBean(String key, T object) {
+        return putBean(key, object, 60 * 60);
     }
 
-    public <T> String putBean(String key, T object, Class<T> clazz, Integer timeout) {
+
+    public <T> String putBean(String key, T object, Integer timeout) {
         try {
-            key = keyBase + key;
-            try (Jedis jedis = getJedis()) {
-                Schema<T> schema = getSchema(clazz);
-                byte[] bytes = ProtobufIOUtil.toByteArray(object, schema, buffer);
-//                String bytes = JSON.toJSONString(object);
+            key = keyBase + ":" + key;
+
+            Jedis jedis = getJedis();
+            try {
+
                 if (timeout == null) {
                     //超时缓存
                     timeout = 60 * 60;  //一个小时
                 }
+
+                byte[] bytes = ProtoStuffSerializerUtil.serialize(object);
                 return jedis.setex(key.getBytes(), timeout, bytes);
+            } finally {
+                returnResource(jedis);
             }
         } catch (Exception e) {
-            logger.error("jedis", e);
+            log.error("jedis", e);
         }
 
         return null;
     }
 
 
-    public List getList(String key) {
+    public <T> List<T> getList(String key, Class cl) {
         try {
-            key = keyBase + key;
-            try (Jedis jedis = getJedis()) {
+            key = keyBase + ":" + key;
+            Jedis jedis = getJedis();
+            try {
                 byte[] bytes = jedis.get(key.getBytes());
 //                String bytes =  jedis.get(key);
                 if (bytes != null) {
                     if ("[]".equals(bytes)) {
-                        return new ArrayList();
+                        return new ArrayList<>();
                     }
-                    Schema<List> schema = getSchema(List.class);
-                    List result = new ArrayList();
-                    ProtobufIOUtil.mergeFrom(bytes, result, schema);
+                    List result = ProtoStuffSerializerUtil.deserializeList(bytes, cl);
 //                    List result = (List) JSON.parseObject(bytes,cl);
                     return result;
                 }
+            } finally {
+                returnResource(jedis);
             }
         } catch (Exception e) {
-            logger.error("jedis", e);
+            log.error("jedis", e);
         }
         return null;
     }
@@ -142,27 +165,41 @@ public class RedisDao {
 
     public String putList(String key, List list, Integer timeout) {
         try {
-            key = keyBase + key;
-            try (Jedis jedis = getJedis()) {
-                Schema<List> schema = getSchema(List.class);
-                byte[] bytes = ProtobufIOUtil.toByteArray(list, schema, buffer);
+            key = keyBase + ":" + key;
+            Jedis jedis = getJedis();
+            try {
+                byte[] bytes = ProtoStuffSerializerUtil.serializeList(list);
+//                String bytes = JSON.toJSONString(list);
                 if (timeout == null) {
                     //超时缓存
                     timeout = 60 * 60;  //一个小时
                 }
-                return jedis.setex(key.getBytes(), timeout, bytes);
+                String result = jedis.setex(key.getBytes(), timeout, bytes);
+//                String result = jedis.setex(key,timeout,bytes);
+                return result;
+            } finally {
+                returnResource(jedis);
             }
         } catch (Exception e) {
-            logger.error("jedis", e);
+            log.error("jedis", e);
         }
 
         return null;
     }
 
     public void delete(String key) {
-        key = keyBase + key;
+        key = keyBase + ":" + key;
         Jedis jedis = getJedis();
-        jedis.del(key);  //删除某个键
+        try {
+            Set keys = jedis.keys(key.toString());
+            int size = keys.size();
+            String[] result = (String[])keys.toArray(new String[size]);//使用了第二种接口，返回值和参数均为结果
+            if (!ObjectUtils.isEmpty(result)){
+                jedis.del(result);  //删除某个键
+            }
+        } finally {
+            returnResource(jedis);
+        }
     }
 
 
@@ -171,11 +208,23 @@ public class RedisDao {
      *
      * @return
      */
-    public Jedis getJedis() {
+    public synchronized Jedis getJedis() {
         if (jedisPool != null) {
-            return jedisPool.getResource();
-        } else {
-            return null;
+            Jedis jedis = null;
+            try {
+                jedis = jedisPool.getResource();
+                return jedis;
+            } catch (Exception e) {
+                returnResource(jedis);
+                log.error("Get jedis error : "+e);
+            }
+        }
+        return null;
+    }
+
+    private void returnResource(final Jedis jedis) {
+        if (jedis != null && jedisPool !=null) {
+            jedis.close();
         }
     }
 }

@@ -10,6 +10,6 @@ import top.oahnus.domain.primary.UserAuth;
  */
 @Repository
 public interface UserAuthRepository extends JpaRepository<UserAuth, Long> {
-    UserAuth findFirstByUsernameAndPassword(String username, String password);
-    UserAuth findFirstByUsername(String username);
+//    UserAuth findFirstByUsernameAndPassword(String username, String password);
+    UserAuth findByUsername(String username);
 }

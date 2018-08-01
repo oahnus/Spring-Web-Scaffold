@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import top.oahnus.common.utils.MD5Helper;
+import top.oahnus.common.utils.PasswordHash;
 import top.oahnus.domain.primary.UserAuth;
 
 import static org.junit.Assert.*;
@@ -23,9 +24,21 @@ public class UserAuthRepositoryTest {
     private UserAuthRepository userAuthRepository;
 
     @Test
-    public void findFirstByUsernameAndPassword() throws Exception {
-        UserAuth auth = userAuthRepository.findFirstByUsernameAndPassword("root", MD5Helper.getMd5("123456"));
-        System.out.println(auth);
+    public void checkAuth() throws Exception {
+//        UserAuth auth = userAuthRepository.findFirstByUsernameAndPassword("root", MD5Helper.getMd5("123456"));
+//        System.out.println(auth);
+//        UserAuth auth = userAuthRepository.findByUsername("root");
+//        if (auth == null) {
+//            System.out.println("user auth null");
+//            return;
+//        }
+//        String res = PasswordHash.createHash("123456");
+//        System.out.println(res);
+//
+//        String salt = res.split(":")[1];
+//        String hash = res.split(":")[2];
+//        auth.setPwdHash(hash);
+//        auth.setSalt(salt);
+//        userAuthRepository.save(auth);
     }
-
 }
