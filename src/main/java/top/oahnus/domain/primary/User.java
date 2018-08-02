@@ -2,16 +2,13 @@ package top.oahnus.domain.primary;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by oahnus on 2017/10/1
  * 21:39.
  */
-@Entity(name = "user")
+@Table(name = "user")
 @Data
 public class User {
     @Id

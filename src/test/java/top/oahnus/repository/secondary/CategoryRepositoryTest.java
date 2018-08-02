@@ -19,12 +19,12 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CategoryRepositoryTest {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+//    @Autowired
+//    private CategoryRepository categoryRepository;
 
     @Test
     public void findByName() throws Exception {
-        Category category = categoryRepository.findByName("JAVA WEB");
-        System.out.println(category);
+//        Category category = categoryRepository.findByName("JAVA WEB");
+//        System.out.println(category);
     }
 }

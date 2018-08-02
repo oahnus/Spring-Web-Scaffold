@@ -1,21 +1,18 @@
 package top.oahnus.common.config.druid;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.alibaba.druid.pool.DruidDataSource;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionFactoryBean;
+import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by oahnus on 2017/11/28
@@ -23,76 +20,33 @@ import java.util.Properties;
  */
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
-@EnableJpaRepositories(
-        entityManagerFactoryRef = "secondaryEntityManagerFactory",
-        transactionManagerRef = "secondaryTransactionManager",
-        basePackages = {"top.oahnus.repository.secondary"}
-)
+@MapperScan(basePackages = SecondaryDataSourceConfig.PACKAGE, sqlSessionFactoryRef = SecondaryDataSourceConfig.SQL_SESSION_FACTORY)
 public class SecondaryDataSourceConfig {
 
-    @Autowired
-    private JpaProperties jpaProperties;
+    public static final String SIGN = "secondary";
+    public static final String DATASOURCE = SIGN + "DataSource";
+    public static final String TRANSACTION_MANAGER = SIGN + "TransactionManager";
+    public static final String SQL_SESSION_FACTORY = SIGN + "SqlSessionFactory";
+    public static final String PACKAGE = "top.oahnus.mapper." + SIGN;
+    public static final String MAPPER_LOCATION = "classpath:mapper/"+SIGN+"/**.xml";
 
-    @Autowired
-    @Qualifier("secondaryDataSource")
-    private DataSource secondaryDataSource;
-
-    /**
-     * 我们通过LocalContainerEntityManagerFactoryBean来获取EntityManagerFactory实例
-     * LocalContainerEntityManagerFactoryBean和userEntityManagerFactory方法其中一个注解@Primary即可
-     *
-     * 此配置用于双MySql数据源，如果是mysql，sqlserver作为数据源，配置项要进行修改
-     * 注释 application-*.yaml 中的jpa配置
-     * @Primary 注解要标记在mysql数据源上，以求mysql语法兼容sqlserver
-     *
-     * @return
-     */
-    @Bean(name = "secondaryEntityManagerFactoryBean")
-    //@secondary
-    public LocalContainerEntityManagerFactoryBean secondaryEntityManagerFactoryBean(EntityManagerFactoryBuilder builder) {
-        // SqlServer数据源使用此配置
-//        LocalContainerEntityManagerFactoryBean em = builder
-//                .dataSource(secondaryDataSource)
-//                .packages("top.oahnus.domain.secondary") //设置实体类所在位置
-//                .persistenceUnit("secondary")
-//                .build();
-//        Properties properties = new Properties();
-//        properties.setProperty("hibernate.physical_naming_strategy", "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
-//        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.SQLServer2012Dialect");
-//        em.setJpaProperties(properties);
-//        return em;
-
-        return builder
-                .dataSource(secondaryDataSource)
-                .properties(getVendorProperties(secondaryDataSource))
-                .packages("top.oahnus.domain.secondary") //设置实体类所在位置
-                .persistenceUnit("secondary")
-                .build();
-        //.getObject();//不要在这里直接获取EntityManagerFactory
+    @Bean(name = "secondaryDataSource")
+    @Qualifier("secondaryDateSource")
+    @ConfigurationProperties(prefix = "spring.datasource.secondary")
+    public DataSource secondaryDataSource() {
+        return new DruidDataSource();
     }
 
-    private Map<String, String> getVendorProperties(DataSource dataSource) {
-        return jpaProperties.getHibernateProperties(dataSource);
+    @Bean(name = TRANSACTION_MANAGER)
+    public DataSourceTransactionManager transactionManager() {
+        return new DataSourceTransactionManager(secondaryDataSource());
     }
 
-    /**
-     * EntityManagerFactory类似于Hibernate的SessionFactory,mybatis的SqlSessionFactory
-     * 总之,在执行操作之前,我们总要获取一个EntityManager,这就类似于Hibernate的Session,
-     * mybatis的sqlSession.
-     * @param builder
-     * @return
-     */
-    @Bean(name = "secondaryEntityManagerFactory")
-    public EntityManagerFactory secondaryEntityManagerFactory(EntityManagerFactoryBuilder builder) {
-        return this.secondaryEntityManagerFactoryBean(builder).getObject();
-    }
-
-    /**
-     * 配置事物管理器
-     * @return
-     */
-    @Bean(name = "secondaryTransactionManager")
-    public PlatformTransactionManager writeTransactionManager(EntityManagerFactoryBuilder builder) {
-        return new JpaTransactionManager(secondaryEntityManagerFactory(builder));
+    @Bean(name = SQL_SESSION_FACTORY)
+    public SqlSessionFactory sqlSessionFactory(@Qualifier(DATASOURCE) DataSource dataSource) throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(dataSource);
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MAPPER_LOCATION));
+        return sessionFactory.getObject();
     }
 }

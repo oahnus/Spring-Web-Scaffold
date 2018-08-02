@@ -1,0 +1,20 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "top.oahnus.mapper.primary.UserAuthMapper">
+    <resultMap id = "userAuthMap" type= "top.oahnus.domain.primary.UserAuth">
+        <result property = "id" column = "id" javaType="Long"/>
+        <result property = "username" column = "username"/>
+        <result property = "pwdHash" column = "pwd_hash"/>
+        <result property = "salt" column = "salt"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <select id="findFirstByUsername" resultMap="userAuthMap" >
+        SELECT *
+        FROM user_auth
+        WHERE username = #{username}
+        LIMIT 1
+    </select>
+</mapper>

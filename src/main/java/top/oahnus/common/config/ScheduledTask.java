@@ -1,14 +1,9 @@
 package top.oahnus.common.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import top.oahnus.domain.primary.UserAuth;
-import top.oahnus.repository.primary.UserAuthRepository;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by oahnus on 2017/11/28
@@ -18,8 +13,6 @@ import java.util.Date;
 @Slf4j
 public class ScheduledTask {
 
-    @Autowired
-    private UserAuthRepository userAuthRepository;
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

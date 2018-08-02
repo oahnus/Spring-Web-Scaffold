@@ -20,8 +20,8 @@ import static org.junit.Assert.*;
 @EnableAutoConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserAuthRepositoryTest {
-    @Autowired
-    private UserAuthRepository userAuthRepository;
+//    @Autowired
+//    private UserAuthRepository userAuthRepository;
 
     @Test
     public void checkAuth() throws Exception {
