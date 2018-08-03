@@ -1,5 +1,6 @@
 package top.oahnus.common.filter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  * 11:50.
  */
 @Component
+@Slf4j
 public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private RedisSessionService sessionService;
@@ -30,6 +32,11 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String option = request.getMethod();
+
+        String origin = request.getHeader("Origin");
+        log.debug("origin = {}", origin);
+        log.debug("host = {}", request.getHeader("Host"));
+
         if ("OPTIONS".equals(option)){
             return true;
         }

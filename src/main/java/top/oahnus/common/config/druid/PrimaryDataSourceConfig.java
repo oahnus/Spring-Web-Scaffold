@@ -1,6 +1,8 @@
 package top.oahnus.common.config.druid;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.github.pagehelper.PageInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,8 +14,10 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
+import top.oahnus.common.config.mybatis.intercepror.MyMybatisInterceptor;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Created by oahnus on 2017/11/28
@@ -54,6 +58,14 @@ public class PrimaryDataSourceConfig {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MAPPER_LOCATION));
+        sessionFactory.setPlugins(new Interceptor[]{
+                myMybatisInterceptor(),
+        });
         return sessionFactory.getObject();
+    }
+
+    @Bean
+    public MyMybatisInterceptor myMybatisInterceptor() {
+        return new MyMybatisInterceptor();
     }
 }
