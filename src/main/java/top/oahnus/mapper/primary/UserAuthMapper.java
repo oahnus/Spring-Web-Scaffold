@@ -11,6 +11,7 @@ import top.oahnus.domain.primary.UserAuth;
  * Created by oahnus on 2017/3/13.
  * 22:53
  */
+@Repository
 public interface UserAuthMapper extends BaseMapper<UserAuth> {
     UserAuth findFirstByUsername(@Param("username") String username);
 }

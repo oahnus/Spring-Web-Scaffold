@@ -9,6 +9,32 @@
         <result property = "pwdHash" column = "pwd_hash"/>
         <result property = "salt" column = "salt"/>
         <result property="userId" column="user_id"/>
+
+        <collection property="roles" column="id" select="findRolesByUserAuthId"/>
+    </resultMap>
+    
+    <select id="findRolesByUserAuthId" resultMap="srMap">
+        select sr.* FROM sys_role sr LEFT JOIN user_role ur ON ur.user_id = #{id} AND sr.id = ur.role_id
+    </select>
+
+    <resultMap id = "srMap" type= "top.oahnus.domain.primary.SysRole">
+        <id property = "id" column = "id" javaType="Long" jdbcType="BIGINT"/>
+        <result property = "name" column = "name" javaType="String"/>
+        <result property = "desc" column = "desc" javaType="String"/>
+        <result property = "enable" column = "enable" javaType="Boolean"/>
+        <collection property="permissions" column="id" select="findPermByRoleId"/>
+    </resultMap>
+
+    <select id="findPermByRoleId" resultMap="spMap">
+        SELECT sp.* FROM sys_permission sp LEFT JOIN role_permission rp ON rp.role_id = #{id} AND sp.id = rp.permission_id
+    </select>
+
+    <resultMap id="spMap" type="top.oahnus.domain.primary.SysPermission">
+        <id column="id" property="id" javaType="Long"/>
+        <result column="name" property="name" javaType="String"/>
+        <result column="desc" property="desc" javaType="String"/>
+        <result column="permission" property="permission" javaType="String"/>
+        <result column="enable" property="enable" javaType="Boolean"/>
     </resultMap>
 
     <select id="findFirstByUsername" resultMap="userAuthMap" >
