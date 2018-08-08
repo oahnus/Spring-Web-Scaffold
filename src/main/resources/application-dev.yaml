@@ -63,6 +63,18 @@ spring:
       enabled: always
   aop:
     auto: true
+  data:
+    mongodb:
+      custom:
+        hosts:
+          - localhost
+        ports:
+          - 27017
+        database: scaffold
+  #        username: root
+  #        password: root
+        connections-per-host: 20
+        min-connections-per-host: 20
 
 mybatis:
   configuration:
