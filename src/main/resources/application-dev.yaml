@@ -70,9 +70,9 @@ mybatis:
     use-column-label: true
   config-location: classpath:mybatis-config.xml
 
-pagehelper:
-  helperDialect: mysql
-  reasonable: true
+#pagehelper:
+#  helperDialect: mysql
+#  reasonable: true
 
 logging:
   pattern:

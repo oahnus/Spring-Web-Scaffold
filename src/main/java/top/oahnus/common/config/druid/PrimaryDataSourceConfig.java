@@ -14,7 +14,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
-import top.oahnus.common.config.mybatis.intercepror.MyMybatisInterceptor;
+import top.oahnus.mybatis.intercepror.MyMybatisInterceptor;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -60,6 +60,7 @@ public class PrimaryDataSourceConfig {
         sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MAPPER_LOCATION));
         sessionFactory.setPlugins(new Interceptor[]{
                 myMybatisInterceptor(),
+                mysqlPaginationInterceptor()
         });
         return sessionFactory.getObject();
     }
@@ -67,5 +68,17 @@ public class PrimaryDataSourceConfig {
     @Bean
     public MyMybatisInterceptor myMybatisInterceptor() {
         return new MyMybatisInterceptor();
+    }
+
+    @Bean
+    public PageInterceptor mysqlPaginationInterceptor() {
+        PageInterceptor pageInterceptor = new PageInterceptor();
+
+        Properties properties = new Properties();
+        properties.setProperty("helperDialect", "mysql");
+        properties.setProperty("reasonable", "true");
+        properties.setProperty("supportMethodsArguments", "true");
+        pageInterceptor.setProperties(properties);
+        return pageInterceptor;
     }
 }

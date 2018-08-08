@@ -1,5 +1,7 @@
 package top.oahnus.mapper.secondary;
 
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import top.oahnus.common.mymapper.BaseMapper;
 import top.oahnus.domain.secondary.Category;
@@ -10,4 +12,7 @@ import top.oahnus.domain.secondary.Category;
  */
 @Repository
 public interface CategoryMapper extends BaseMapper<Category> {
+
+    @Select("SELECT * FROM user WHERE user = #{dd} AND where ")
+    public void testSee(@Param("dd") String user);
 }
