@@ -7,6 +7,7 @@ package top.oahnus.common.enums;
 public enum ErrorType {
     INTERNAL_SERVER_ERROR,
     NO_AUTH,
+    NO_ACCESS,
     REQUEST_PARAM_INVALID,
     DATA_NOT_FOUND,
     DATA_EXISTED,

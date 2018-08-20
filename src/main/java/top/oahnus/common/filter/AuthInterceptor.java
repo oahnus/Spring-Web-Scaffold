@@ -41,25 +41,25 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        HandlerMethod method = (HandlerMethod) handler;
-
-        Class<?> controllerClazz = method.getBean().getClass();
-        String packageName = controllerClazz.getPackage().getName();
-
-        OpenAccess access = method.getMethodAnnotation(OpenAccess.class);
-
-        if (access != null || packageName.equals(openPackageName)) {
-            return true;
-        }
-        if (sessionService == null) {
-            //解决service为null无法注入问题
-            BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
-            sessionService = (RedisSessionService) factory.getBean("redisSessionService");
-        }
-        Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
-        if (userId == null) {
-            throw new AuthException(Message.NO_AUTH);
-        }
+//        HandlerMethod method = (HandlerMethod) handler;
+//
+//        Class<?> controllerClazz = method.getBean().getClass();
+//        String packageName = controllerClazz.getPackage().getName();
+//
+//        OpenAccess access = method.getMethodAnnotation(OpenAccess.class);
+//
+//        if (access != null || packageName.equals(openPackageName)) {
+//            return true;
+//        }
+//        if (sessionService == null) {
+//            //解决service为null无法注入问题
+//            BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+//            sessionService = (RedisSessionService) factory.getBean("redisSessionService");
+//        }
+//        Long userId = sessionService.getUserId(request.getHeader("TOKEN"));
+//        if (userId == null) {
+//            throw new AuthException(Message.NO_AUTH);
+//        }
         return true;
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import top.oahnus.common.annotations.UserId;
 import top.oahnus.service.session.RedisSessionService;
-import top.oahnus.service.session.SessionService;
 
 /**
  * Created by oahnus on 2018/4/4

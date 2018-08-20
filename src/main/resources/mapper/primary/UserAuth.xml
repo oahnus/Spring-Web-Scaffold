@@ -8,7 +8,8 @@
         <result property = "username" column = "username"/>
         <result property = "pwdHash" column = "pwd_hash"/>
         <result property = "salt" column = "salt"/>
-        <result property="userId" column="user_id"/>
+        <result property = "userId" column="user_id"/>
+        <result property = "lastPasswordReset" column="last_password_reset"/>
 
         <collection property="roles" column="id" select="findRolesByUserAuthId"/>
     </resultMap>

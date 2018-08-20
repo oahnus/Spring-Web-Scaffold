@@ -1,8 +1,9 @@
-package top.oahnus.common.config;
+package top.oahnus.common.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -40,6 +41,15 @@ public class ExceptionAdvice {
     public ResultData processAuthException(AuthException e) {
         log.error(e.getMessage());
         return new ResultData(ErrorType.NO_AUTH, Message.NO_AUTH);
+    }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResultData processAccessDeniedException(AccessDeniedException e) {
+        log.error(e.getMessage());
+        return new ResultData(ErrorType.NO_ACCESS, e.getMessage());
     }
 
     @ResponseBody
