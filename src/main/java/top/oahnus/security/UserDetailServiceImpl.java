@@ -6,10 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import top.oahnus.common.exception.AuthException;
-import top.oahnus.domain.factory.AuthFactory;
-import top.oahnus.domain.primary.UserAuth;
-import top.oahnus.mapper.primary.UserAuthMapper;
-import top.oahnus.service.AuthService;
+import top.oahnus.domain.primary.User;
+import top.oahnus.mapper.primary.UserMapper;
 
 /**
  * Created by oahnus on 2018/8/20
@@ -18,14 +16,14 @@ import top.oahnus.service.AuthService;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
     @Autowired
-    private UserAuthMapper authMapper;
+    private UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        UserAuth auth = authMapper.findFirstByUsername(s);
-        if (auth == null) {
+        User user = userMapper.findFirstByUsername(s);
+        if (user == null) {
             throw new AuthException("");
         }
-        return auth;
+        return user;
     }
 }

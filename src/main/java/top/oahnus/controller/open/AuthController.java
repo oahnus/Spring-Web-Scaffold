@@ -40,10 +40,16 @@ public class AuthController extends ControllerMixIn{
 
     @PostMapping("/login")
     public String post(@Validated @RequestBody AuthPayload payload) {
+        // ////////////////////
+        // 1. 使用自定义token, 使用Cookie保存客户端token， Redis保存Server端token
 //        TokenDto tokenDto =  authService.login(payload);
 //        Cookie tokenCookie = new Cookie("token", tokenDto.getToken());
 //        response().addCookie(tokenCookie);
 //        return tokenDto;
+        // ////////////////////
+
+        // ////////////////////////////
+        // 2. Spring Security + jwt 做权限验证
         Authentication authentication = this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         payload.getUsername(),
@@ -58,6 +64,7 @@ public class AuthController extends ControllerMixIn{
 
         // Return the token
         return token;
+        // /////////////////////////////
     }
 
     @GetMapping("/test")

@@ -1,5 +1,6 @@
 package top.oahnus.mapper.primary;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import top.oahnus.common.mymapper.BaseMapper;
 import top.oahnus.domain.primary.User;
@@ -11,4 +12,5 @@ import top.oahnus.domain.primary.User;
  */
 @Repository
 public interface UserMapper extends BaseMapper<User> {
+    User findFirstByUsername(@Param("username") String username);
 }

@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import top.oahnus.domain.primary.User;
-import top.oahnus.domain.primary.UserAuth;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
@@ -22,7 +21,7 @@ import java.util.Map;
 @Component
 public class TokenUtils {
     private final String secret = "jf&23;e8Dafsooe12(2lj#ncaajdisenfakio@aslfx8783";
-    private final long expiration = 86400L;
+    private final long expiration = 7200L;
     private final String AUDIENCE_UNKNOWN   = "unknown";
     private final String AUDIENCE_WEB       = "web";
     private final String AUDIENCE_MOBILE    = "mobile";
@@ -86,6 +85,18 @@ public class TokenUtils {
         return claims;
     }
 
+    public Long getUserIdFromToken(String token) {
+        Long userId;
+        try {
+            final Claims claims = this.getClaimsFromToken(token);
+            Integer val = (Integer) claims.get("userId");
+            return Long.valueOf(val);
+        } catch (Exception e) {
+            userId = null;
+        }
+        return userId;
+    }
+
     private Date generateCurrentDate() {
         return new Date(System.currentTimeMillis());
     }
@@ -124,6 +135,10 @@ public class TokenUtils {
         Map<String, Object> claims = new HashMap<String, Object>();
         claims.put("sub", userDetails.getUsername());
         claims.put("created", this.generateCurrentDate());
+
+//        User user = (User) userDetails;
+//        claims.put("userId", user.getId());
+
         return this.generateToken(claims);
     }
 
@@ -171,7 +186,7 @@ public class TokenUtils {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
-        UserAuth user = (UserAuth) userDetails;
+        User user = (User) userDetails;
         final String username = this.getUsernameFromToken(token);
         final Date created = this.getCreatedDateFromToken(token);
         final Date expiration = this.getExpirationDateFromToken(token);

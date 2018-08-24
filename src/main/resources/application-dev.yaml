@@ -77,9 +77,6 @@ spring:
         min-connections-per-host: 20
 
 mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-    use-column-label: true
   config-location: classpath:mybatis-config.xml
 
 #pagehelper:

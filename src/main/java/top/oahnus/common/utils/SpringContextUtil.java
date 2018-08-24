@@ -3,11 +3,15 @@ package top.oahnus.common.utils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by oahnus on 2018/8/10
  * 13:52.
  */
+@Component
+@Lazy(false)
 public class SpringContextUtil implements ApplicationContextAware {
 
     private static ApplicationContext context;

@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import top.oahnus.domain.primary.UserAuth;
+import top.oahnus.domain.primary.User;
+import top.oahnus.mybatis.condition.Condition;
 
 import static org.junit.Assert.*;
 
@@ -20,11 +21,13 @@ import static org.junit.Assert.*;
 public class UserAuthMapperTest {
 
     @Autowired
-    private UserAuthMapper userAuthMapper;
+    private UserMapper userMapper;
 
     @Test
     public void findFirstByUsername() {
-        UserAuth userAuth = userAuthMapper.findFirstByUsername("root");
-        System.out.println(userAuth);
+//        UserAuth userAuth = userAuthMapper.findFirstByUsername("root");
+//        System.out.println(userAuth);
+
+        System.out.println(userMapper.selectOneByCondition(Condition.create(User.class).eq("username", "root")));
     }
 }

@@ -17,7 +17,7 @@ public class ResultData {
     private Map<String, Object> data = new HashMap<>();
 
     public ResultData(ErrorType type, String msg) {
-        this.code = type.ordinal();
+        this.code = type.getCode();
         this.msg = msg;
     }
 

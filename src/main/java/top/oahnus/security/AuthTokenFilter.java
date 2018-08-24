@@ -40,6 +40,8 @@ public class AuthTokenFilter extends UsernamePasswordAuthenticationFilter implem
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+//                request().setAttribute("userId", tokenUtils.getUserIdFromToken(authToken));
             }
         }
         chain.doFilter(req, res);

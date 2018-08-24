@@ -13,9 +13,6 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public Boolean hasAccess() {
-        System.out.println(SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities());
         return SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()

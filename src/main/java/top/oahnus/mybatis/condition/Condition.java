@@ -24,21 +24,31 @@ public class Condition<T> {
         return condition;
     }
 
-    public static <N> Condition create() {
-        Condition<N> condition = new Condition<>();
-        return condition;
-    }
+//    public static <N> Condition create() {
+//        Condition<N> condition = new Condition<>();
+//        return condition;
+//    }
 
     public String getSql() {
         return this.sql.toString();
     }
 
     public Condition eq(String colName, String val) {
+        this.sql.append(colName).append(" = '").append(val).append("'");
+        return this;
+    }
+
+    public Condition eq(String colName, Number val) {
         this.sql.append(colName).append(" = ").append(val);
         return this;
     }
 
     public Condition notEq(String colName, String val) {
+        this.sql.append(colName).append(" <> '").append(val).append("'");
+        return this;
+    }
+
+    public Condition notEq(String colName, Number val) {
         this.sql.append(colName).append(" <> ").append(val);
         return this;
     }

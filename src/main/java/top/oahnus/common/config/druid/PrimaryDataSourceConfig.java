@@ -62,6 +62,7 @@ public class PrimaryDataSourceConfig {
                 myMybatisInterceptor(),
                 mysqlPaginationInterceptor()
         });
+        sessionFactory.setTypeHandlersPackage("top.oahnus.mybatis.handler");
         return sessionFactory.getObject();
     }
 
