@@ -1,11 +1,8 @@
 package top.oahnus.mybatis.utils;
 
 import org.apache.ibatis.reflection.Reflector;
-import top.oahnus.domain.primary.UserAuth;
 
-import javax.persistence.Transient;
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 /**
  * Created by oahnus on 2018/8/22

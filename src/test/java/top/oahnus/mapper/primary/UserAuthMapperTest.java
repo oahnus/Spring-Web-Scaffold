@@ -25,9 +25,6 @@ public class UserAuthMapperTest {
 
     @Test
     public void findFirstByUsername() {
-//        UserAuth userAuth = userAuthMapper.findFirstByUsername("root");
-//        System.out.println(userAuth);
-
         System.out.println(userMapper.selectOneByCondition(Condition.create(User.class).eq("username", "root")));
     }
 }

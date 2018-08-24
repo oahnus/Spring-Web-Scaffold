@@ -3,7 +3,7 @@
         "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace = "top.oahnus.mapper.primary.UserMapper">
-    <resultMap id = "userAuthMap" type= "top.oahnus.domain.primary.User">
+    <resultMap id = "userMap" type= "top.oahnus.domain.primary.User">
         <result property = "id" column = "id" javaType="Long"/>
         <result property = "username" column = "username"/>
         <result property = "pwdHash" column = "pwd_hash"/>
@@ -12,7 +12,7 @@
         <result property = "sex" column="sex"/>
         <result property = "lastPasswordReset" column="last_password_reset"/>
 
-        <collection property="roles" column="id" select="findRolesByUserAuthId"/>
+        <collection property="roles" column="id" select="findRolesByUserId"/>
     </resultMap>
     
     <select id="findRolesByUserId" resultMap="srMap">
@@ -39,7 +39,7 @@
         <result column="enable" property="enable" javaType="Boolean"/>
     </resultMap>
 
-    <select id="findFirstByUsername" resultMap="userAuthMap" >
+    <select id="findFirstByUsername" resultMap="userMap" >
         SELECT *
         FROM user_auth
         WHERE username = #{username}
