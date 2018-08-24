@@ -52,7 +52,10 @@ spring:
     maxTotal: 100
     maxIdle: 8
     waitMill: 3000
-
+  rabbitmq:
+    addresses: 127.0.0.1:5672
+    username: guest
+    password: guest
   # ehcache缓存设置
   cache:
     jcache:
