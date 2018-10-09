@@ -31,3 +31,4 @@ app.log
 mvnw
 mvnw.cmd
 target/
+*.iml

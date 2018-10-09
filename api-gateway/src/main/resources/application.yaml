@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: scaffold-gateway
+  cloud:
+    gateway:
+      locator:
+        enabled: true
+      routes:
+      # =====================================
+      # 分发RouteDefinitionLocator
+      # =====================================
+      - id: scaffold-auth
+        uri: lb://scaffold-auth
+        order: 8000
+        predicates:
+          - Path=/api/auth/**
+        filters:
+          - StripPrefix=2
+      - id: scaffold-micro
+        uri: lb://scaffold-micro
+        order: 8001
+        predicates:
+          - Path=/api/micro/**
+        filters:
+          - StripPrefix=2
+      - id: ace-admin
+        uri: lb://scaffold-tool
+        order: 8002
+        predicates:
+          - Path=/api/tool/**
+        filters:
+          - StripPrefix=2
+  output:
+    ansi:
+      enabled: always
+server:
+  port: 10002
+
+eureka:
+  instance:
+    statusPageUrlPath: /actuator/info
+    healthCheckUrlPath: /actuator/health
+    # docker 部署开启
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9999/eureka/
+
+auth:
+  serviceId: scaffold-auth
+  user:
+    token-header: Z_TOKEN_HEADER
+  client:
+    id: scaffold-gateway
+    secret: 123456
+    token-header: Z_CLIENT_HEADER
+logging:
+  level:
+    com.github.oahnus.scaffold.gateway: debug
+

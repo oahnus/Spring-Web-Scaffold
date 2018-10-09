@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: scaffold-micro
+  output:
+    ansi:
+      enabled: always
+server:
+  port: 10001
+eureka:
+  instance:
+    statusPageUrlPath: /actuator/info
+    healthCheckUrlPath: /actuator/health
+    # docker 部署开启
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9999/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  security:
+    enabled: false
+
+auth:
+  serviceId: scaffold-auth
+  user:
+    token-header: Z_TOKEN_HEADER
+  client:
+    id: scaffold-micro
+    secret: 123456
+    token-header: Z_CLIENT_HEADER
+logging:
+  level:
+    com.github.oahnus.scaffold.microservice: debug
