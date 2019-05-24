@@ -26,8 +26,8 @@ hs_err_pid*
 .gitignore
 .idea/
 .mvn/
-SpringScaffold.iml
 app.log
 mvnw
 mvnw.cmd
 target/
+*.iml

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Spring-Web-Scaffold</artifactId>
+        <groupId>top.oahnus</groupId>
+        <version>0.0.1</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>top.oahnus</groupId>
+    <artifactId>scaffold-web</artifactId>
+    <version>0.0.1</version>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>top.oahnus</groupId>
+            <artifactId>scaffold-domain</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>top.oahnus</groupId>
+            <artifactId>scaffold-common</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring-boot-web-starter</artifactId>
+            <version>1.4.0-RC2</version>
+        </dependency>
+    </dependencies>
+</project>

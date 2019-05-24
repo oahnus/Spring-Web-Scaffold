@@ -1,0 +1,30 @@
+server:
+  port: 9999
+
+spring:
+  application:
+    name:
+  datasource:
+    url: jdbc:mysql://localhost:3306/scaffold?useUnicode=true&characterEncoding=UTF8&erverTimezone=Asia&useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  rabbitmq:
+    host: localhost
+    username: oahnus
+    password: pass
+    port: 5672
+  redis:
+    host: localhost
+    port: 6379
+    password: pass
