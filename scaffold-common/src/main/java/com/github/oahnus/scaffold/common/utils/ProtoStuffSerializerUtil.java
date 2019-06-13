@@ -4,16 +4,27 @@ import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
+import com.github.oahnus.scaffold.common.dto.RespData;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by oahnus on 2017/2/25.
  */
 public class ProtoStuffSerializerUtil {
+
+    public static void main(String... args) {
+        Schema<RespData> schema = RuntimeSchema.getSchema(RespData.class);
+
+//        byte[] bytes = serialize(new Date());
+//
+//        System.out.println(deserialize(bytes, Date.class));
+    }
+
     public static <T> byte[] serialize(T obj) {
         if (obj == null) {
             throw new RuntimeException("Cannot Serialize Null Object");

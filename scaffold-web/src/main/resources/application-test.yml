@@ -28,5 +28,11 @@ spring:
     host: 39.98.237.99
     port: 6379
     password: chuxuan123sh
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        min-idle: 0
+        max-idle: 8
   main:
     allow-bean-definition-overriding: true

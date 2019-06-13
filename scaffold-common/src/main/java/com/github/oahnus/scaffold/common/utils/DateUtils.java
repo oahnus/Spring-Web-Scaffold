@@ -1,8 +1,11 @@
 package com.github.oahnus.scaffold.common.utils;
 
+import com.sun.istack.internal.Nullable;
+
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -90,6 +93,14 @@ public class DateUtils {
         }
     }
 
+    public static Date floatTimestamp2Date(float fStamp) {
+        LocalDate localDate = LocalDate
+                .of(1899, 12, 30)
+                .plus((long) fStamp, ChronoUnit.DAYS);
+        return localDate2date(localDate);
+    }
+
+
     public static String date2String(Date date, String pattern) {
         SimpleDateFormat dateFormat = getDateFormat(pattern);
         synchronized (dateFormat) {
@@ -104,7 +115,7 @@ public class DateUtils {
         }
     }
 
-    public static Date string2Date(String str, SimpleDateFormat sdf) {
+    public @Nullable static Date string2Date(String str, SimpleDateFormat sdf) {
         Date date = null;
         try {
             date = sdf.parse(str);

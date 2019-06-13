@@ -1,9 +1,14 @@
 package com.github.oahnus.scaffold.web.rest;
 
 import org.apache.shiro.authz.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * Created by oahnus on 2019/4/24
@@ -12,6 +17,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @GetMapping("/cache")
+    @Cacheable(value = "Scaffold:CacheDate", keyGenerator = "keyGenerator")
+    public String testCache() {
+        System.out.println("not hit cache");
+        return new Date().toString();
+    }
+
+    @GetMapping("/cache2")
+    public String testCacheWithTemplate() {
+        Date date = (Date) redisTemplate.opsForValue().get("Scaffold:CacheDate2:Date");
+        if (date == null) {
+            System.out.println("not hit cache2");
+            date = new Date();
+            redisTemplate.opsForValue().set("cacheDate2:date", date);
+        }
+        return date.toString();
+    }
+
     // 由于TestController类上没有加@RequiresAuthentication注解，
     // 不要求用户登录才能调用接口。所以hello()和a1()接口都是可以匿名访问的
     @GetMapping("/hello")
