@@ -1,14 +1,25 @@
 package com.github.oahnus.scaffold.web.rest;
 
+import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.oahnus.scaffold.common.utils.HttpUtil;
+import com.github.oahnus.scaffold.web.rabbit.RabbitQueues;
+import org.apache.catalina.security.SecurityUtil;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.*;
+import org.apache.shiro.subject.Subject;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by oahnus on 2019/4/24
@@ -20,6 +31,38 @@ public class TestController {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
+    @GetMapping("/subject")
+    @RequiresAuthentication
+    public Object testSubject() {
+        Subject subject = SecurityUtils.getSubject();
+        return subject.getPrincipal();
+    }
+
+    @GetMapping("/hitokoto")
+    public String testHitokoto() {
+        String hitokoto = (String) redisTemplate.opsForValue().get("Scaffold:Hitokoto");
+        if (StringUtils.isEmpty(hitokoto)) {
+            String json = HttpUtil.hitokoto();
+            HashMap map = JSON.parseObject(json, HashMap.class);
+            if(map == null) {
+                return "";
+            }
+            hitokoto = String.format("%s ---- 【%s】", map.get("hitokoto"), map.get("from"));
+            redisTemplate.opsForValue().set("Scaffold:Hitokoto", hitokoto, 30, TimeUnit.SECONDS);
+        }
+        return hitokoto;
+    }
+
+    @GetMapping("/queue")
+    public String testRabbitMQ() {
+        Date date = new Date();
+        rabbitTemplate.convertAndSend(RabbitQueues.TEST, date);
+        return "success";
+    }
 
     @GetMapping("/cache")
     @Cacheable(value = "Scaffold:CacheDate", keyGenerator = "keyGenerator")
@@ -34,7 +77,7 @@ public class TestController {
         if (date == null) {
             System.out.println("not hit cache2");
             date = new Date();
-            redisTemplate.opsForValue().set("cacheDate2:date", date);
+            redisTemplate.opsForValue().set("Scaffold:CacheDate2:Date", date);
         }
         return date.toString();
     }

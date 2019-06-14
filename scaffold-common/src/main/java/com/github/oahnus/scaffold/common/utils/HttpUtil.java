@@ -25,17 +25,24 @@ public class HttpUtil {
         httpService = retrofit.create(HttpService.class);
     }
 
-    public static String get(String encode, String charset) throws IOException {
-        Response<ResponseBody> response = httpService.get(encode, charset).execute();
-        if (response.code() == 200) {
-            return response.body() != null ? response.body().string() : null;
-        } else {
-            return null;
+    public static String hitokoto() {
+        try {
+            Response<ResponseBody> response = httpService.get("json", "utf-8").execute();
+            if (response.code() == 200) {
+                String json = response.body().string();
+                log.info("[HttpUtil].hitokoto - json = {}", json);
+                return response.body() != null ? json : null;
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
     public static void main(String... args) throws IOException {
-        String json = HttpUtil.get("json", "utf-8");
+        String json = HttpUtil.hitokoto();
         System.out.println(json);
     }
 }

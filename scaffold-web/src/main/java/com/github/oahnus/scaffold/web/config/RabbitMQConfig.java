@@ -1,5 +1,6 @@
 package com.github.oahnus.scaffold.web.config;
 
+import com.github.oahnus.scaffold.web.rabbit.RabbitQueues;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -50,7 +51,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue testQueue() {
-        return new Queue("test-queue", true, false, false);
+        return new Queue(RabbitQueues.TEST, true, false, false);
     }
 
 }
