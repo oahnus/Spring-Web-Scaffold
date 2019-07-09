@@ -15,19 +15,19 @@ spring:
       maximum-pool-size: 15
       auto-commit: true
       idle-timeout: 30000
-      pool-name: DatebookHikariCP
+      pool-name: DataHikariCP
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
   rabbitmq:
     host: 39.98.237.99
     username: oahnus
-    password: chuxuan123sh
+    password: oahnus
     port: 5672
   redis:
     host: 39.98.237.99
     port: 6379
-    password: chuxuan123sh
+    password: oahnus
     jedis:
       pool:
         max-active: 8
@@ -36,3 +36,6 @@ spring:
         max-idle: 8
   main:
     allow-bean-definition-overriding: true
+  quartz:
+    job-store-type: memory
+    scheduler-name: ScaffoldScheduler
