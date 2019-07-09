@@ -2,6 +2,7 @@ package com.github.oahnus.scaffold.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -9,6 +10,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * 22:11.
  */
 @SpringBootApplication
+@ComponentScan(basePackages = "com.github.oahnus.scaffold")
 @MapperScan(basePackages = {"com.github.oahnus.scaffold.domain.mapper"})
 public class WebSiteApplication {
     public static void main(String... args) {

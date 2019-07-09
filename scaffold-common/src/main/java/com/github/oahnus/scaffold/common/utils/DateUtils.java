@@ -284,6 +284,10 @@ public class DateUtils {
         return Math.abs(diff / (1000 * 60));
     }
 
+    public static String now() {
+        return date2String(new Date(), PATTERN_YMD_HMS2);
+    }
+
     public static void main(String[] args) {
         Date date = new Date();
         System.out.println(date2String(date, PATTERN_YM));
@@ -303,4 +307,5 @@ public class DateUtils {
             }).start();
         }
     }
+
 }

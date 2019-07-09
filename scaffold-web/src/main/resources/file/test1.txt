@@ -1,0 +1,25 @@
+ // 获取上送参数
+        String currentPath  = request.getParameter("currentPath");
+        String subPath  = request.getParameter("subPath");
+        String fileName  = request.getParameter("fileName");
+        String download  = request.getParameter("download");
+
+        String dpath = "";
+        String dname = "";
+        boolean isfail = false;
+        String msg = "";
+
+        log.debug("下载文件请求参数: " + currentPath + " " + subPath + " " + fileName + " " + download);
+
+        // 下载目录时, 检查  download 为1  , 压缩目录 root + currentPath + subPath
+        if (StringUtils.equals(download, "1")) {
+            String tmppath  = FileUtil.contactPath(currentPath, subPath);
+            String dirpath = FileUtil.contactPath(this.fileRoot, tmppath);
+            String zipname = ".zip";
+
+            if (StringUtils.isBlank(tmppath) || StringUtils.equals(tmppath, File.separator)) {
+                // 当tmppath 为空时, 取名为 root
+                zipname = "root" + zipname;
+            } else {
+                String[] strs = tmppath.spl1
+finish

@@ -2,6 +2,7 @@ package com.github.oahnus.scaffold.web.rest;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.oahnus.scaffold.common.annotations.Download;
 import com.github.oahnus.scaffold.common.utils.HttpUtil;
 import com.github.oahnus.scaffold.web.rabbit.RabbitQueues;
 import org.apache.catalina.security.SecurityUtil;
@@ -17,8 +18,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +40,28 @@ public class TestController {
 
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @GetMapping("/down1")
+    @Download
+    public File downloadOne() {
+        String path = this.getClass().getClassLoader().getResource("file/test1.txt").getPath();
+        System.out.println(path);
+        File file = new File(path);
+        System.out.println(file.exists());
+        return file;
+    }
+
+    @GetMapping("/down2")
+    @Download
+    public List<File> downloadMore(HttpServletResponse response) {
+        String path = this.getClass().getClassLoader().getResource("file/test1.txt").getPath();
+        String path2 = this.getClass().getClassLoader().getResource("file/test2.txt").getPath();
+
+        List<File> fileList = new ArrayList<>();
+        fileList.add(new File(path));
+        fileList.add(new File(path2));
+        return fileList;
+    }
 
     @GetMapping("/subject")
     @RequiresAuthentication
