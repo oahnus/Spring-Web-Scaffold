@@ -1,6 +1,6 @@
 package com.github.oahnus.scaffold.web.quartz;
 
-import com.github.oahnus.scaffold.web.service.ScheduleService;
+import com.github.oahnus.scaffold.web.manager.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

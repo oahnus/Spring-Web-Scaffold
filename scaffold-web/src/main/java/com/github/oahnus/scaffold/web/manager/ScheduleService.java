@@ -1,4 +1,4 @@
-package com.github.oahnus.scaffold.web.service;
+package com.github.oahnus.scaffold.web.manager;
 
 import com.github.oahnus.scaffold.web.quartz.CronJob;
 import com.github.oahnus.scaffold.web.quartz.JobScheduleCreator;
@@ -40,7 +40,7 @@ public class ScheduleService {
 
         SimpleTrigger trigger = TriggerBuilder.newTrigger().forJob(jobDetail)
                 .withIdentity("SimpleQuartzTrigger")
-                .withSchedule(simpleSchedule().repeatForever().withIntervalInSeconds(30))
+                .withSchedule(simpleSchedule().repeatForever().withIntervalInMinutes(10))
                 .build();
 
         JobDetail cronJobDetail = JobBuilder.newJob()
@@ -52,7 +52,7 @@ public class ScheduleService {
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
                 .forJob(cronJobDetail)
                 .withIdentity("CronQuartzTrigger")
-                .withSchedule(cronSchedule("0 * * * * ?"))
+                .withSchedule(cronSchedule("0 */30 * * * ?"))
                 .build();
 
         scheduler.scheduleJob(jobDetail, trigger);
