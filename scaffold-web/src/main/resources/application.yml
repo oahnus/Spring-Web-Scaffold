@@ -1,8 +1,8 @@
 server:
-  port: 9999
+  port: 10000
 
 spring:
   application:
-    name:
+    name: Scaffold
   profiles:
     active: test

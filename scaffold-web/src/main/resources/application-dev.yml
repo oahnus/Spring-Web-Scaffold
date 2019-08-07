@@ -1,9 +1,4 @@
-server:
-  port: 9999
-
 spring:
-  application:
-    name:
   datasource:
     url: jdbc:mysql://localhost:3306/scaffold?useUnicode=true&characterEncoding=UTF8&erverTimezone=Asia&useSSL=false
     username: root

@@ -3,7 +3,6 @@ package com.github.oahnus.scaffold.common.aspects;
 import com.github.oahnus.scaffold.common.exceptions.ServerException;
 import com.github.oahnus.scaffold.common.interfaces.HttpMixin;
 import com.github.oahnus.scaffold.common.utils.DateUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,7 +11,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,7 +40,7 @@ public class DownloadAspect implements HttpMixin {
         Object retVal = joinPoint.proceed();
         if (retVal instanceof File) {
             File file = (File) retVal;
-            addFile(response, file);
+            writeInStream(response, file);
         } else if (retVal instanceof List) {
             @SuppressWarnings("unchecked")
             List<File> fileList = (List<File>) retVal;
@@ -51,16 +52,14 @@ public class DownloadAspect implements HttpMixin {
                         .replaceAll(":", "-");
 
                 File downloadFile = File.createTempFile(zipFilename, ".zip");
-                zos = new ZipOutputStream(
-                        new BufferedOutputStream(
-                                new FileOutputStream(downloadFile)));
+                zos = new ZipOutputStream(new FileOutputStream(downloadFile));
                 for (File file : fileList) {
                     compress(zos, file);
                 }
                 zos.flush();
                 zos.close(); // 不close, 下载的压缩文件会损坏
                 zos = null;
-                addFile(response, downloadFile);
+                writeInStream(response, downloadFile);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new ServerException("Download Failed");
@@ -76,9 +75,9 @@ public class DownloadAspect implements HttpMixin {
         return null;
     }
 
-    private void addFile(HttpServletResponse response, File file) throws IOException {
-        response.setContentType("multipart/form-data");
-//        response.setContentType("application/octet-stream");
+    private void writeInStream(HttpServletResponse response, File file) throws IOException {
+//        response.setContentType("multipart/form-data");
+        response.setContentType("application/octet-stream");
         response.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         response.addHeader("Content-Disposition",
                 "attachment; filename=" + URLEncoder.encode(file.getName(), "utf-8"));
