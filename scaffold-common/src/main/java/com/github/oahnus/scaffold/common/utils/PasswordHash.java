@@ -198,8 +198,11 @@ public class PasswordHash {
         try
         {
             // Print out 10 hashes
-            for(int i = 0; i < 10; i++)
-                System.out.println(PasswordHash.createHash("p\r\nassw0Rd!"));
+//            for(int i = 0; i < 10; i++)
+            String hash1 = PasswordHash.createHash("passw0Rd!");
+            System.out.println(hash1);
+
+            System.out.println(PasswordHash.validatePassword("passw0Rd!", hash1));
 
             // Test password validation
             boolean failure = false;

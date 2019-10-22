@@ -5,4 +5,4 @@ spring:
   application:
     name: Scaffold
   profiles:
-    active: test
+    active: prod

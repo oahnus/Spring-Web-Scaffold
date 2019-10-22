@@ -31,3 +31,5 @@ mvnw
 mvnw.cmd
 target/
 *.iml
+
+application-prod.yml
